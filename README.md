@@ -1,0 +1,37 @@
+# DomainRep - easily scan your .pcap files for malicious IPs and domains
+
+## How to use it?
+
+Download the repository and simply run the **domain_rep.py** script. Then provide all the information it asks for: 
+- .pcap file
+- output report file name
+- VirusTotal API key
+
+<img width="2722" height="356" alt="image" src="https://github.com/user-attachments/assets/fd9f9908-6a3c-4fd7-a442-94f76eed0703" />
+
+You can provide either just the **name** of the file or **full path**. 
+
+By default all generated files are saved in _**output**_ folder.
+
+**The API key is not being saved.**
+## How does it work?
+Python script directly parses the **.pcap** file using the **pyshark** module. 
+It tries to find all **public IP addresses** and **domain names** and saves them to a **.json** file. 
+
+### This particular data is being extracted:
+<img width="802" height="584" alt="image" src="https://github.com/user-attachments/assets/0bfe5915-7b00-4978-8059-e9b85a6336d6" />
+
+Further the indicators are being sent to **VirusTotal API** to check their reputation. 
+Later another script removes entries with a crystal clear reputation. 
+Finally suspicious indicators are being sent to the local LLM in order to generate a structured and readable report out of it. 
+The model is also provided with a system prompt and a manually selected report. 
+With these specific instructions and an example it's able to generate consistent output. 
+
+**Remember:** VirusTotal free API supports only **4 lookups / min** so it may take a while!
+
+However the progress is being saved between sessions.
+
+### Below is the flowchart of the process:
+<img width="1144" height="1324" alt="domain_rep drawio" src="https://github.com/user-attachments/assets/c294487f-4cc5-40e4-b01a-c98c23ba06b3" />
+
+
