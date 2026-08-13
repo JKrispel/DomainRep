@@ -24,7 +24,8 @@ It tries to find all **public IP addresses** and **domain names** and saves them
 Further the indicators are being sent to **VirusTotal API** to check their reputation. 
 Later another script removes entries with a crystal clear reputation. 
 Finally suspicious indicators are being sent to the local LLM in order to generate a structured and readable report out of it. 
-The model is also provided with a system prompt and a manually selected report. 
+
+The model is also provided with a **system prompt** and a **manually selected report**. 
 With these specific instructions and an example it's able to generate consistent output. 
 
 **Remember:** VirusTotal free API supports only **4 lookups / min** so it may take a while!
@@ -32,6 +33,6 @@ With these specific instructions and an example it's able to generate consistent
 However the progress is being saved between sessions.
 
 ### Below is the flowchart of the process:
-<img width="1144" height="1324" alt="domain_rep drawio" src="https://github.com/user-attachments/assets/c294487f-4cc5-40e4-b01a-c98c23ba06b3" />
+<img width="861" height="1023" alt="diagram drawio (1)" src="https://github.com/user-attachments/assets/7d19abc9-efaf-4a4f-b1e7-1cbf7e67766a" />
 
 
