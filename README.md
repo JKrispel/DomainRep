@@ -6,6 +6,7 @@ Download the repository and simply run the **domain_rep.py** script in your term
 - .pcap file
 - output report file name
 - VirusTotal API key
+- internal domain to ignore (optional)
 
 <img width="2722" height="356" alt="image" src="https://github.com/user-attachments/assets/fd9f9908-6a3c-4fd7-a442-94f76eed0703" />
 
