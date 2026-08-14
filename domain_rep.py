@@ -1,4 +1,4 @@
-import os
+import json
 import getpass
 from pathlib import Path
 
@@ -20,7 +20,9 @@ def main():
         print(f"\n[-] Error: File '{pcap_path}' not found.")
         return
 
-    report_input = input("Provide name or path for the report you will generate (e.g. report.md): ").strip()   
+    report_input = input("Provide name or path for the report you will generate (e.g. report.md): ").strip()
+    internal_domain_input = input("Provide internal domain to ignore (press Enter to skip): ").strip()
+    internal_domain = internal_domain_input if internal_domain_input else None
     # getpass hides entered characters
     api_key = getpass.getpass("Provide your VirusTotal API key (characters are hidden): ").strip()
 
@@ -48,7 +50,7 @@ def main():
     print("\n" + "-"*40)
     print(f"[STEP 1/3] Parsing domains and IP addresses from .pcap")
     print("-" * 40)
-    parse_pcap_to_json(str(pcap_path), str(parsed_file))
+    parse_pcap_to_json(str(pcap_path), str(parsed_file), internal_domain)
 
     # VirusTotal reputation
     print("\n" + "-"*40)
@@ -58,7 +60,7 @@ def main():
 
     if not success: 
         
-        print(f"\n[!] VirusTotal scanning interrupted! Your progress has been saved. Resume at any time!")
+        print(f"[!] VirusTotal scanning interrupted! Your progress has been saved. Resume at any time!")
         return  # exit to avoid skipping data and error loops
 
     # LLM Filtering & Reporting
@@ -73,6 +75,28 @@ def main():
     print(f"  - VirusTotal reputation data:   {vt_file}")
     print(f"  - Filtered (malicious) data:    {sus_file}")
     print(f"  - Final report provided by LLM: {report_file}")
+    # Warn about potentially missed indicators
+    error_file = output_dir / f"errors_{base_name}.json"
+    
+    if error_file.exists():
+
+        try:
+            with open(error_file, 'r', encoding='utf-8') as f:
+
+                errors_data = json.load(f)
+                
+            total_errors = len(errors_data.get("domains", {})) + len(errors_data.get("ips", {}))
+            
+            if total_errors > 0:
+
+                print(f"  - Skipped/Error indicators:     {error_file}")
+                print(f"\n[!] WARNING: {total_errors} indicator(s) could not be checked automatically")
+                print("             (e.g., 404 Not Found, invalid format).")
+                print("             Manual investigation of the errors file is highly recommended!")
+
+        except Exception:
+            pass  # No errors!
+    
     print("="*55)
 
 

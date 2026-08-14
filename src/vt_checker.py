@@ -37,44 +37,62 @@ def check_vt(identifier, api_key, indicator_type="domains"):
     
     url = f"https://www.virustotal.com/api/v3/{indicator_type}/{identifier}"
 
-    try:
-        response = requests.get(url, headers=headers)
+    while True:
 
-        if response.status_code == 200:
+        try:
+            response = requests.get(url, headers=headers, timeout=10)
 
-            data = response.json()
+            if response.status_code == 200:
 
-            return data.get("data", {}).get("attributes", {}).get("last_analysis_stats", {})
-        
-        elif response.status_code == 429:
+                data = response.json()
 
-            print("  [!] API Rate Limit exceeded! Waiting 60 seconds...")
-            time.sleep(60)
+                return data.get("data", {}).get("attributes", {}).get("last_analysis_stats", {})
 
-            return check_vt(identifier, api_key, indicator_type)
-        
-        else:
-            print(f"  [-] API Error for {identifier}: {response.status_code}")
+            elif response.status_code == 404:
 
-            return None
-        
-    except requests.exceptions.Timeout:
+                print(f"  [-] Not found in VT (404): {identifier}")
 
-        print(f"  [-] Timeout: Serwer VirusTotal nie odpowiedział w ciągu 10s.")
+                return {"malicious": 0, "suspicious": 0, "error": "404 Not Found"}
+            
+            elif response.status_code == 400:
 
-        return None
+                print(f"  [-] Invalid format / Bad Parsing (400): {identifier}")
+                
+                return {"malicious": 0, "suspicious": 0, "error": "400 Bad Request"}
+                
+            elif response.status_code in [401, 403]:
 
-    except requests.exceptions.ConnectionError:
+                print(f"  [-] Fatal API Error: HTTP {response.status_code} (Check your API Key)")
 
-        print(f"  [-] Błąd połączenia: Brak internetu lub problem z DNS.")
+                return None
 
-        return None
+            elif response.status_code == 429:
 
-    except requests.exceptions.RequestException as e:
+                print("  [!] API Rate Limit exceeded! Waiting 60 seconds...")
+                time.sleep(60)
+                continue
 
-        print(f"  [-] Inny błąd HTTP/requests: {e}")
+            elif response.status_code >= 500:
 
-        return None
+                print(f"  [-] VT Server Error (HTTP {response.status_code}). Waiting 30 seconds...")
+                time.sleep(30)
+                continue
+
+            else:
+                print(f"  [-] Unexpected HTTP {response.status_code} for {identifier}")
+                
+                return None
+
+        # --- BŁĘDY POŁĄCZENIA (Czekamy i ponawiamy próbę) ---
+        except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
+            print(f"  [-] Network error: {type(e).__name__}. Retrying in 30 seconds...")
+            time.sleep(30)
+            continue
+            
+        except requests.exceptions.RequestException as e:
+            print(f"  [-] Unexpected request error: {e}. Retrying in 30 seconds...")
+            time.sleep(30)
+            continue
 
 
 def run_vt_check(api_key, input_file, output_file):
@@ -124,6 +142,6 @@ def run_vt_check(api_key, input_file, output_file):
         
         time.sleep(16)
 
-    print(f"\n[*] VirusTotal scanning complete! Results saved to: {output_file}")
+    print(f"\n[*] VirusTotal scanning completed! Results saved to: {output_file}")
 
     return True
