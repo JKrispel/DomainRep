@@ -8,9 +8,9 @@ Download the repository and simply run the **domain_rep.py** script in your term
 - VirusTotal API key
 - internal domain to ignore (optional)
 
-<img width="2722" height="356" alt="image" src="https://github.com/user-attachments/assets/fd9f9908-6a3c-4fd7-a442-94f76eed0703" />
+<img width="2386" height="406" alt="image" src="https://github.com/user-attachments/assets/e2437b8f-5b0b-43a1-9b27-eadb76188fc7" />
 
-You can provide either just the **name** of the file or **full path**. 
+You can provide just the **name** of the file or an **absolute path**. 
 
 By default all generated files are saved in _**output**_ folder.
 
