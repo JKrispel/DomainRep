@@ -2,7 +2,7 @@
 
 ## How to use it?
 
-Download the repository and simply run the **domain_rep.py** script. Then provide all the information it asks for: 
+Download the repository and simply run the **domain_rep.py** script in your terminal. Then provide all the information it asks for: 
 - .pcap file
 - output report file name
 - VirusTotal API key
@@ -22,6 +22,7 @@ It tries to find all **public IP addresses** and **domain names** and saves them
 <img width="802" height="584" alt="image" src="https://github.com/user-attachments/assets/0bfe5915-7b00-4978-8059-e9b85a6336d6" />
 
 Further the indicators are being sent to **VirusTotal API** to check their reputation. 
+Failed requests (if present) will be dumped into an error file for further manual investigation. 
 Later another script removes entries with a crystal clear reputation. 
 Finally suspicious indicators are being sent to the local LLM in order to generate a structured and readable report out of it. 
 
