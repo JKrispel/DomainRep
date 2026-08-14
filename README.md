@@ -1,4 +1,4 @@
-# DomainRep - easily scan your .pcap files for malicious IPs and domains
+# DomainRep - scan your .pcap files for malicious IPs and domains.
 
 ## How to use it?
 
@@ -35,6 +35,6 @@ With these specific instructions and an example it's able to generate consistent
 However the progress is being saved between sessions.
 
 ### Below is the flowchart of the process:
-<img width="861" height="1023" alt="diagram drawio (1)" src="https://github.com/user-attachments/assets/7d19abc9-efaf-4a4f-b1e7-1cbf7e67766a" />
+<img width="700" height="800" alt="diagram drawio (1)" src="https://github.com/user-attachments/assets/7d19abc9-efaf-4a4f-b1e7-1cbf7e67766a" />
 
 
