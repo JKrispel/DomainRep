@@ -21,11 +21,16 @@ You can provide just the **name** of the file or an **absolute path**.
 By default all generated files are saved in _**output**_ folder.
 
 **The API key is not being saved.**
+
 ## How does it work?
+
+#### To begin you can take a look at the output: [**examples/automatic_report.md**](https://github.com/JKrispel/DomainRep/blob/main/examples/automatic_report.md), further explanation below...
+
 Python script directly parses the **.pcap** file using the **pyshark** module. 
 It tries to find all **public IP addresses** and **domain names** and saves them to a **.json** file. 
 
 ### This particular data is being extracted:
+
 <img width="802" height="584" alt="image" src="https://github.com/user-attachments/assets/0bfe5915-7b00-4978-8059-e9b85a6336d6" />
 
 Further the indicators are being sent to **VirusTotal API** to check their reputation. 
