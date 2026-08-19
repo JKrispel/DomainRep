@@ -1,5 +1,11 @@
 # DomainRep - scan your .pcap files for malicious IPs and domains.
 
+## Requirements
+
+- Python
+- Wireshark / tshark (for pyshark wrapper module to work)
+- LM Studio with local server enabled on port 1234 (default) and LLM loaded (e.g. openai/gpt-oss-20b works fine)
+
 ## How to use it?
 
 Download the repository and simply run the **domain_rep.py** script in your terminal. Then provide all the information it asks for: 
