@@ -18,7 +18,7 @@ Download the repository and simply run the **domain_rep.py** script in your term
 
 You can provide just the **name** of the file or an **absolute path**. 
 
-By default all generated files are saved in _**output**_ folder.
+By default all generated files are saved in the _**output**_ folder.
 
 **The API key is not being saved.**
 
@@ -43,9 +43,9 @@ With these specific instructions and an example it's able to generate consistent
 
 **Remember:** VirusTotal free API supports only **4 lookups / min** so it may take a while!
 
-However the progress is being saved between sessions.
+However the API responses are being continuously **cached** and kept for 24 hours. This allows us to skip many future VT requests and significantly speed up the process.
 
-### Below is the flowchart of the process:
+### Below is the flowchart for the tool:
 <img width="700" height="800" alt="diagram drawio (1)" src="https://github.com/user-attachments/assets/7d19abc9-efaf-4a4f-b1e7-1cbf7e67766a" />
 
 
