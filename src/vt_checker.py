@@ -4,27 +4,44 @@ import requests
 import os
 import datetime
 
+CACHE_FILE = os.path.join("output", "vt_cache.json")
+CACHE_TTL_SECONDS = 86400
 
-def load_progress(output_file):
 
-    if os.path.exists(output_file):
+def load_cache():
 
-        with open(output_file, 'r', encoding='utf-8') as f:
+    if os.path.exists(CACHE_FILE):
 
-            print(f"[+] Previous progress loaded!")
+        with open(CACHE_FILE, 'r', encoding='utf-8') as f:
 
-            return json.load(f)
+            print(f"[+] Cached VirustTotal data loaded!")
+
+            raw_data = json.load(f)
+            now = time.time()
+            clean_cache = {"domains": {}, "ips": {}}
+            
+            for category in ["domains", "ips"]:
+
+                for item, content in raw_data.get(category, {}).items():
+
+                    if isinstance(content, dict) and "cached_at" in content:
+
+                        if now - content["cached_at"] < CACHE_TTL_SECONDS:
+
+                            clean_cache[category][item] = content
+                            
+            return clean_cache
         
     return {"domains": {}, "ips": {}}
 
 
-def save_progress(data, output_file):
+def save_cache(data):
 
-    with open(output_file, 'w', encoding='utf-8') as f:
+    with open(CACHE_FILE, 'w', encoding='utf-8') as f:
 
         json.dump(data, f, indent=4)
 
-    print("  [+] Progress saved.")
+    print("  [+] Saved to cache.")
 
 
 def check_vt(identifier, api_key, indicator_type="domains"):
@@ -83,13 +100,14 @@ def check_vt(identifier, api_key, indicator_type="domains"):
                 
                 return None
 
-        # --- BŁĘDY POŁĄCZENIA (Czekamy i ponawiamy próbę) ---
         except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
+
             print(f"  [-] Network error: {type(e).__name__}. Retrying in 30 seconds...")
             time.sleep(30)
             continue
             
         except requests.exceptions.RequestException as e:
+
             print(f"  [-] Unexpected request error: {e}. Retrying in 30 seconds...")
             time.sleep(30)
             continue
@@ -106,9 +124,29 @@ def run_vt_check(api_key, input_file, output_file):
     domains = pcap_data.get("domains", [])
     ips = pcap_data.get("public_ips", [])
     print(f"[*] To check: {len(domains)} domains and {len(ips)} IPs.")   
-    results = load_progress(output_file)
-    domains_to_check = [d for d in domains if d not in results["domains"]]
-    ips_to_check = [ip for ip in ips if ip not in results["ips"]]
+    cache = load_cache()
+    run_results = {"domains": {}, "ips": {}}
+
+    domains_to_check = []
+
+    for d in domains:
+
+        if d in cache["domains"]:
+
+            run_results["domains"][d] = cache["domains"][d]["stats"]
+        else:
+            domains_to_check.append(d)
+
+    ips_to_check = []
+
+    for ip in ips:
+
+        if ip in cache["ips"]:
+
+            run_results["ips"][ip] = cache["ips"][ip]["stats"]
+        else:
+            ips_to_check.append(ip)
+
     print(f"[*] Remaining API checks: {len(domains_to_check)} domains and {len(ips_to_check)} IPs.")
     items_left = len(domains_to_check) + len(ips_to_check)
 
@@ -119,8 +157,13 @@ def run_vt_check(api_key, input_file, output_file):
 
         if stats:
 
-            results["domains"][domain] = stats
-            save_progress(results, output_file)
+            cache["domains"][domain] = {
+
+                "stats": stats,
+                "cached_at": time.time()
+            }          
+            save_cache(cache)
+            run_results["domains"][domain] = stats
             items_left -= 1
         else:
             return False            
@@ -134,13 +177,22 @@ def run_vt_check(api_key, input_file, output_file):
 
         if stats:
 
-            results["ips"][ip] = stats
-            save_progress(results, output_file)
-            items_left -= 1
-        else:
+            cache["ips"][ip] = {
+
+                "stats": stats,
+                "cached_at": time.time()
+            }
+            save_cache(cache)           
+            run_results["ips"][ip] = stats
+            items_left -= 1           
+        else:        
             return False   
         
         time.sleep(16)
+
+    with open(output_file, 'w', encoding='utf-8') as f:
+
+        json.dump(run_results, f, indent=4)
 
     print(f"\n[*] VirusTotal scanning completed! Results saved to: {output_file}")
 

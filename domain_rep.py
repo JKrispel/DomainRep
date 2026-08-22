@@ -60,7 +60,8 @@ def main():
 
     if not success: 
         
-        print(f"[!] VirusTotal scanning interrupted! Your progress has been saved. Resume at any time!")
+        print(f"[!] VirusTotal scanning interrupted! Your progress has been saved to cache file. Resume at any time!")
+        
         return  # exit to avoid skipping data and error loops
 
     # LLM Filtering & Reporting
