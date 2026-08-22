@@ -1,4 +1,4 @@
-# DomainRep - scan your .pcap files for malicious IPs and domains.
+# DomainRep - automatically scan your .pcap files for malicious IPs and domains.
 
 ## Requirements
 
