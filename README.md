@@ -2,10 +2,11 @@
 
 ## Requirements
 
-- Python
+- Python + modules (requirements.txt)
 - Wireshark / tshark (for pyshark wrapper module to work)
 - LM Studio with local server enabled on port 1234 (default) and LLM loaded (e.g. openai/gpt-oss-20b works fine)
 - some decent GPU to load the local LLM (or you can swap the _url_ variable in the source code for some cloud provider's API, if it fits your risk profile)
+
 ## How to use it?
 
 Download the repository and simply run the **domain_rep.py** script in your terminal. Then provide all the information it asks for: 
