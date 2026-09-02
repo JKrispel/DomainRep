@@ -1,6 +1,6 @@
 # DomainRep - turn your .pcap files into reports containing malicious IPs and domains.
 
-## Requirements
+## Requirements:
 
 - Python + modules (requirements.txt)
 - Wireshark / tshark (for pyshark wrapper module to work)
