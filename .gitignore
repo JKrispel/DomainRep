@@ -1,4 +1,5 @@
 output/
+remote_hosts_automation/backend_config.py
 *.pcap
 *.pcapng
 *.pyc

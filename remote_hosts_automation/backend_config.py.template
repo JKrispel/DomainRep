@@ -1,0 +1,11 @@
+# Create a file "backend_config.py" and copy this contend filled with your credentials and preferences.
+
+R2_ENDPOINT_URL = ""
+R2_ACCESS_KEY = ""
+R2_SECRET_KEY = ""
+R2_BUCKET_NAME = ""
+LOCAL_PCAP_DIR = r""
+VT_API_KEY = ""
+NGROK_AUTHTOKEN = ""
+INTERNAL_DOMAIN = ""  # skip checking it's reputation (optional)
+SLACK_WEBHOOK_URL = ""  # (optional)
