@@ -49,3 +49,6 @@ However the API responses are being continuously **cached** and kept for 24 hour
 <img width="700" height="800" alt="diagram drawio (1)" src="https://github.com/user-attachments/assets/7d19abc9-efaf-4a4f-b1e7-1cbf7e67766a" />
 
 
+### Automation for multiple hosts
+
+You can use scripts provided in **_remote_hosts_automation_** folder for this task. Instructions in the [**AUTOMATION.md**](https://github.com/JKrispel/DomainRep/blob/main/remote_hosts_automation/AUTOMATION.md) file will help you to set up your own **NIDS** with automated, enriched alerts from multiple remote hosts.
